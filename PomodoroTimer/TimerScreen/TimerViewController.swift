@@ -24,8 +24,6 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     let pauseButton = UIButton()
     let stopButton = UIButton()
     
-    let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
-    
     //MARK: functions
     
     override func viewDidLoad() {
@@ -45,10 +43,10 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     @objc func pauseButtonTapped() {
         if !presenter.isPaused() {
             presenter.pause()
-            pauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: largeConfig), for: .normal)
+            pauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ButtonsConstants.largeConfig), for: .normal)
         } else {
             presenter.resume()
-            pauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: largeConfig), for: .normal)
+            pauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: ButtonsConstants.largeConfig), for: .normal)
         }
     }
     
@@ -90,22 +88,18 @@ class TimerViewController: UIViewController, TimerViewProtocol {
         countdownLabel.font = .systemFont(ofSize: 60, weight: .bold)
         countdownView.addSubview(countdownLabel)
         
-        
-        let redColor = UIColor(red: 255/255, green: 105/255, blue: 97/255, alpha: 1)
-        let greenColor = UIColor(red: 120/255, green: 224/255, blue: 143/255, alpha: 1)
-        
-        pauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: largeConfig), for: .normal)
+        pauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: ButtonsConstants.largeConfig), for: .normal)
         pauseButton.layer.cornerRadius = 14
         pauseButton.layer.borderColor = UIColor.white.cgColor
         pauseButton.layer.borderWidth = 2
-        pauseButton.tintColor = greenColor
+        pauseButton.tintColor = Colors.green
         view.addSubview(pauseButton)
         
-        stopButton.setImage(UIImage(systemName: "stop.fill", withConfiguration: largeConfig), for: .normal)
+        stopButton.setImage(UIImage(systemName: "stop.fill", withConfiguration: ButtonsConstants.largeConfig), for: .normal)
         stopButton.layer.cornerRadius = 14
         stopButton.layer.borderColor = UIColor.white.cgColor
         stopButton.layer.borderWidth = 2
-        stopButton.tintColor = redColor
+        stopButton.tintColor = Colors.red
         view.addSubview(stopButton)
         
         timerDidSwitchMode(isWorkTime: true)

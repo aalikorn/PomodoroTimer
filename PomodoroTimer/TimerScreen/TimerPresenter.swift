@@ -41,7 +41,7 @@ class TimerPresenter: TimerPresenterProtocol {
     }
     
     func timerDidSwitchMode(isWorkTime: Bool) {
-        
+        view?.timerDidSwitchMode(isWorkTime: isWorkTime)
     }
     
     required init(task: Task) {
