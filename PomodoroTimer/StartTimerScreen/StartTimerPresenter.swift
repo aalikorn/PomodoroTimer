@@ -12,7 +12,12 @@ protocol StartTimerPresenterProtocol: AnyObject {
 }
 
 class StartTimerPresenter: StartTimerPresenterProtocol {
+    var timerPresenter: TimerPresenterProtocol!
+    weak var view: startTimerViewProtocol!
+    
     func startTimer(workTime: Int, restTime: Int) {
-        
+        let task = Task(workTime: workTime, restTime: restTime)
+        let timerPresenter = TimerPresenter(task: task)
+        view.presentTimer(presenter: timerPresenter)
     }
 }

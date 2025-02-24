@@ -9,12 +9,18 @@ import UIKit
 
 protocol startTimerViewProtocol: AnyObject {
     func startButtonTapped()
+    func plusWorkTimeButtonTapped()
+    func plusRestTimeButtonTapped()
+    func minusWorkTimeButtonTapped()
+    func minusRestTimeButtonTapped()
+    func presentTimer(presenter: TimerPresenterProtocol)
+    func configurePresenter()
 }
 
 class StartTimerViewController: UIViewController, startTimerViewProtocol {
     
     //MARK: variables
-    var presenter: StartTimerPresenter!
+    var presenter: StartTimerPresenterProtocol!
     
     private let workTimePickerView = TimePickerView(forWork: true)
     private let restTimePickerView = TimePickerView(forWork: false)
@@ -23,9 +29,16 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
     //MARK: functions
     override func viewDidLoad() {
         super.viewDidLoad()
+        configurePresenter()
         setupUI()
         setupConstraints()
         setupTargets()
+    }
+    
+    func configurePresenter() {
+        let presenter = StartTimerPresenter()
+        presenter.view = self
+        self.presenter = presenter
     }
     
     private func setupTargets() {
@@ -39,18 +52,32 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
     @objc func startButtonTapped() {
         var workTime: Int
         if let timeLabelText = workTimePickerView.timeLabel.text {
-            workTime = Int(timeLabelText) ?? 25
+            workTime = Int(timeLabelText)! * 60
         } else {
-            workTime = 25
+            workTime = 25 * 60
         }
+        
+        workTime = 5
+       
         
         var restTime: Int
         if let timeLabelText = restTimePickerView.timeLabel.text {
-            restTime = Int(timeLabelText)!
+            restTime = Int(timeLabelText)! * 60
         } else {
-            restTime = 5
+            restTime = 5 * 60
         }
+        
+        restTime = 5
+        
+      
+        
         presenter.startTimer(workTime: workTime, restTime: restTime)
+    }
+    
+    func presentTimer(presenter: TimerPresenterProtocol) {
+        let timerVC = TimerViewController(presenter: presenter)
+        timerVC.modalPresentationStyle = .fullScreen
+        present(timerVC, animated: true)
     }
     
     @objc func plusWorkTimeButtonTapped() {

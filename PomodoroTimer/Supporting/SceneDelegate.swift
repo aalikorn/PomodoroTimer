@@ -17,8 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         
         let rootVC = StartTimerViewController()
-        let presenter = StartTimerPresenter()
-        rootVC.presenter = presenter
         
         window?.rootViewController = UINavigationController(rootViewController: rootVC)
         window?.makeKeyAndVisible()
