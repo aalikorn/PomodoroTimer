@@ -71,5 +71,6 @@ class TimerPresenter: TimerPresenterProtocol {
     
     func finish() {
         timerService.finish()
+        view?.dismissTimer()
     }
 }

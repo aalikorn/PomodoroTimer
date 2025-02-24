@@ -10,6 +10,7 @@ import UIKit
 protocol TimerViewProtocol: AnyObject {
     func pauseButtonTapped()
     func stopButtonTapped()
+    func dismissTimer()
     func timerDidUpdate(_ time: String)
     func timerDidSwitchMode(isWorkTime: Bool)
 }
@@ -52,6 +53,9 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     
     @objc func stopButtonTapped() {
         presenter.finish()
+    }
+    
+    func dismissTimer() {
         dismiss(animated: true, completion: nil)
     }
     
