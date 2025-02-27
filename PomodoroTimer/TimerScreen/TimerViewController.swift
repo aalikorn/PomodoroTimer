@@ -19,11 +19,13 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     //MARK: variables
     var presenter: TimerPresenterProtocol!
     
-    let countdownView = UIView()
-    let countdownLabel = UILabel()
-    let modeLabel = UILabel()
-    let pauseButton = UIButton()
-    let stopButton = UIButton()
+    private let countdownView = UIView()
+    private let countdownLabel = UILabel()
+    private let modeLabel = UILabel()
+    private let pauseButton = UIButton()
+    private let stopButton = UIButton()
+    
+    private let progressLayer = CAShapeLayer()
     
     //MARK: functions
     
@@ -64,7 +66,7 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     }
     
     func timerDidSwitchMode(isWorkTime: Bool) {
-        modeLabel.text = isWorkTime ? "Focus" : "Rest"
+        modeLabel.text = isWorkTime ? "Focus" : "Break"
         countdownLabel.text = isWorkTime ? presenter.getWorkTime() : presenter.getRestTime()
     }
     
@@ -74,7 +76,7 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     }
 
     
-    func setupUI() {
+    private func setupUI() {
         view.backgroundColor = .black
         
         modeLabel.textColor = .white
@@ -109,11 +111,11 @@ class TimerViewController: UIViewController, TimerViewProtocol {
         timerDidSwitchMode(isWorkTime: true)
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         countdownView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             countdownView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            countdownView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -110),
+            countdownView.topAnchor.constraint(equalTo: modeLabel.bottomAnchor, constant: 30),
             countdownView.widthAnchor.constraint(equalToConstant: 300),
             countdownView.heightAnchor.constraint(equalToConstant: 300),
         ])
@@ -121,7 +123,7 @@ class TimerViewController: UIViewController, TimerViewProtocol {
         modeLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             modeLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            modeLabel.bottomAnchor.constraint(equalTo: countdownView.topAnchor, constant: -50),
+            modeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             modeLabel.widthAnchor.constraint(equalToConstant: 300)
         ])
         
@@ -135,16 +137,18 @@ class TimerViewController: UIViewController, TimerViewProtocol {
         NSLayoutConstraint.activate([
             pauseButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -30),
             pauseButton.topAnchor.constraint(equalTo: countdownView.bottomAnchor, constant: 50),
-            pauseButton.widthAnchor.constraint(equalToConstant: 120),
-            pauseButton.heightAnchor.constraint(equalToConstant: 120)
+            pauseButton.heightAnchor.constraint(equalToConstant: 110),
+            pauseButton.widthAnchor.constraint(equalTo: pauseButton.heightAnchor),
+            pauseButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
         ])
         
         stopButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             stopButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 30),
             stopButton.topAnchor.constraint(equalTo: countdownView.bottomAnchor, constant: 50),
-            stopButton.widthAnchor.constraint(equalToConstant: 120),
-            stopButton.heightAnchor.constraint(equalToConstant: 120)
+            stopButton.widthAnchor.constraint(equalTo: stopButton.heightAnchor),
+            stopButton.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
+            stopButton.heightAnchor.constraint(equalToConstant: 110),
         ])
         
         

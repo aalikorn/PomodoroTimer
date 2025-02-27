@@ -56,8 +56,6 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
         } else {
             workTime = 25 * 60
         }
-        
-        workTime = 5
        
         
         var restTime: Int
@@ -66,8 +64,6 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
         } else {
             restTime = 5 * 60
         }
-        
-        restTime = 5
         
       
         
@@ -148,7 +144,7 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
         workTimePickerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             workTimePickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            workTimePickerView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -250),
+            workTimePickerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
             workTimePickerView.widthAnchor.constraint(equalToConstant: 250),
             workTimePickerView.heightAnchor.constraint(equalToConstant: 150)
         ])
@@ -156,18 +152,21 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
         restTimePickerView.setupConstraints()
         restTimePickerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            restTimePickerView.topAnchor.constraint(equalTo: workTimePickerView.bottomAnchor, constant: 30),
             restTimePickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            restTimePickerView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50),
             restTimePickerView.widthAnchor.constraint(equalToConstant: 250),
             restTimePickerView.heightAnchor.constraint(equalToConstant: 150)
         ])
         
         startButton.translatesAutoresizingMaskIntoConstraints = false
+        let startButtonTopConstraint = startButton.topAnchor.constraint(equalTo: restTimePickerView.bottomAnchor, constant: 60)
+        startButtonTopConstraint.priority = .defaultHigh
         NSLayoutConstraint.activate([
             startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            startButton.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 200),
-            startButton.widthAnchor.constraint(equalToConstant: 200),
-            startButton.heightAnchor.constraint(equalToConstant: 80)
+            startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
+            startButton.widthAnchor.constraint(equalToConstant: 250),
+            startButtonTopConstraint,
+            startButton.heightAnchor.constraint(lessThanOrEqualToConstant: 100)
         ])
     }
 }
