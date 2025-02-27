@@ -26,6 +26,7 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     private let stopButton = UIButton()
     
     private let progressLayer = CAShapeLayer()
+    private let backgroundLayer = CAShapeLayer()
     
     //MARK: functions
     
@@ -46,9 +47,13 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     @objc func pauseButtonTapped() {
         if !presenter.isPaused() {
             presenter.pause()
+            pauseAnimation()
             pauseButton.setImage(UIImage(systemName: "play.fill", withConfiguration: ButtonsConstants.largeConfig), for: .normal)
         } else {
             presenter.resume()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+                self.resumeAnimation()
+            }
             pauseButton.setImage(UIImage(systemName: "pause.fill", withConfiguration: ButtonsConstants.largeConfig), for: .normal)
         }
     }
@@ -67,12 +72,64 @@ class TimerViewController: UIViewController, TimerViewProtocol {
     
     func timerDidSwitchMode(isWorkTime: Bool) {
         modeLabel.text = isWorkTime ? "Focus" : "Break"
-        countdownLabel.text = isWorkTime ? presenter.getWorkTime() : presenter.getRestTime()
+        countdownLabel.text = isWorkTime ? presenter.getWorkTimeString() : presenter.getRestTimeString()
+        let duration = isWorkTime ? presenter.getWorkTime() : presenter.getRestTime()
+        startProgressAnimation(duration: duration)
     }
     
     func setupTargets() {
         pauseButton.addTarget(self, action: #selector(pauseButtonTapped), for: .touchUpInside)
         stopButton.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
+    }
+    
+    private func setupProgressCircle() {
+        let path = UIBezierPath(arcCenter: CGPoint(x: 150, y: 150),
+                                radius: 148,
+                                startAngle: 3 * .pi / 2,
+                                endAngle: 7 * .pi / 2,
+                                clockwise: true)
+        
+        backgroundLayer.path = path.cgPath
+        backgroundLayer.strokeColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+        backgroundLayer.fillColor = UIColor.clear.cgColor
+        backgroundLayer.lineWidth = 8
+        backgroundLayer.lineCap = .round
+        countdownView.layer.addSublayer(backgroundLayer)
+        
+        progressLayer.path = path.cgPath
+        progressLayer.strokeColor = UIColor.white.cgColor
+        progressLayer.fillColor = UIColor.clear.cgColor
+        progressLayer.lineWidth = 8
+        progressLayer.lineCap = .round
+        progressLayer.strokeEnd = 1
+
+        
+        countdownView.layer.addSublayer(progressLayer)
+    }
+    
+    private func startProgressAnimation(duration: TimeInterval) {
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.toValue = 0
+        animation.duration = duration
+        animation.fillMode = .forwards
+        animation.isRemovedOnCompletion = false
+        
+        progressLayer.add(animation, forKey: "progressAnimation")
+    }
+    
+    private func pauseAnimation() {
+        let pausedTime = progressLayer.convertTime(CACurrentMediaTime(), from: nil)
+        progressLayer.speed = 0.0
+        progressLayer.timeOffset = pausedTime
+    }
+    
+    private func resumeAnimation() {
+        let pausedTime = progressLayer.timeOffset
+        progressLayer.speed = 1.0
+        progressLayer.timeOffset = 0.0
+        progressLayer.beginTime = 0.0
+        let timeSincePause = progressLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        progressLayer.beginTime = timeSincePause
     }
 
     
@@ -86,8 +143,6 @@ class TimerViewController: UIViewController, TimerViewProtocol {
         
         countdownView.backgroundColor = .black
         countdownView.layer.cornerRadius = 150
-        countdownView.layer.borderColor = UIColor.white.cgColor
-        countdownView.layer.borderWidth = 2
         view.addSubview(countdownView)
         
         countdownLabel.textColor = .white
@@ -107,6 +162,8 @@ class TimerViewController: UIViewController, TimerViewProtocol {
         stopButton.layer.borderWidth = 2
         stopButton.tintColor = Colors.red
         view.addSubview(stopButton)
+        
+        setupProgressCircle()
         
         timerDidSwitchMode(isWorkTime: true)
     }

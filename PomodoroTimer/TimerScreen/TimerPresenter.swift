@@ -5,6 +5,8 @@
 //  Created by Даша Николаева on 23.02.2025.
 //
 
+import Foundation
+
 protocol TimerPresenterProtocol: TimerServiceDelegate {
     func pause()
     func finish()
@@ -12,8 +14,10 @@ protocol TimerPresenterProtocol: TimerServiceDelegate {
     func resume()
     func attachView(view: TimerViewProtocol?)
     init(task: Task)
-    func getRestTime() -> String
-    func getWorkTime() -> String
+    func getRestTimeString() -> String
+    func getWorkTimeString() -> String
+    func getWorkTime() -> TimeInterval
+    func getRestTime() -> TimeInterval
     func isPaused() -> Bool
 }
 
@@ -28,12 +32,20 @@ class TimerPresenter: TimerPresenterProtocol {
         return self.paused
     }
     
-    func getWorkTime() -> String {
+    func getWorkTimeString() -> String {
         return Utils.formatTime(task.workTime)
     }
     
-    func getRestTime() -> String {
+    func getRestTimeString() -> String {
         return Utils.formatTime(task.restTime)
+    }
+    
+    func getWorkTime() -> TimeInterval {
+        return TimeInterval(task.workTime)
+    }
+    
+    func getRestTime() -> TimeInterval {
+        return TimeInterval(task.restTime)
     }
     
     func timerDidUpdate(time: Int) {

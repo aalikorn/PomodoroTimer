@@ -56,6 +56,8 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
         } else {
             workTime = 25 * 60
         }
+        
+        workTime = 30
        
         
         var restTime: Int
@@ -64,7 +66,6 @@ class StartTimerViewController: UIViewController, startTimerViewProtocol {
         } else {
             restTime = 5 * 60
         }
-        
       
         
         presenter.startTimer(workTime: workTime, restTime: restTime)
